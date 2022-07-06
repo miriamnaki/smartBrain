@@ -74,7 +74,7 @@ app.put('/image',(req, res) => {
   database.users.forEach(user => {
     if(user.id ===  id) {
       found = true
-      user.entries++
+      user.entries++ 
       return res.json(user.entries)
     }
   })
