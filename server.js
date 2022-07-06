@@ -17,7 +17,7 @@ const database = {
       joined: new Date()
     },
     {
-      id: '123',
+      id: '128',
       name: 'Mimi',
       email: 'mimi@gmail.com',
       pasword: 'banana',
@@ -52,6 +52,36 @@ app.post('/register', (req, res) => {
     joined: new Date()
   })
   res.status(200).json(database.users[database.users.length - 1])
+})
+
+app.get('/profile/:id', (req, res) => {
+  const {id} = req.params;
+  let found = false;
+  database.users.forEach(user => {
+    if(user.id ===  id) {
+      found = true
+      return res.json(user)
+    }
+  })
+  if(!found){
+    res.status(400).json('User not found')
+  }
+})
+
+app.put('/image',(req, res) => {
+  const {id} = req.body;
+  let found = false;
+  database.users.forEach(user => {
+    if(user.id ===  id) {
+      found = true
+      user.entries++
+      return res.json(user.entries)
+    }
+  })
+  if(!found){
+    res.status(400).json('User not found')
+  }
+
 })
 
 app.listen(3000, ()=> {
