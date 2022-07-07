@@ -12,7 +12,7 @@ const db = knex({
     database : 'smart-brain'
   }
 });
-console.log(db.select('*').from('users'))
+db.select('*').from('users').then(data => console.log(data))
 
 const app = express();
 
@@ -20,26 +20,26 @@ app.use(bodyParser.json());
 
 app.use(cors());
 
-const database = {
-  users: [
-    {
-      id: '123',
-      name: 'John',
-      email: 'john@gmail.com',
-      password: 'cookies',
-      entries: 2,
-      joined: new Date()
-    },
-    {
-      id: '128',
-      name: 'Mimi',
-      email: 'mimi@gmail.com',
-      pasword: 'banana',
-      entries: 5,
-      joined: new Date()
-    },
-  ]
-}
+// const database = {
+//   users: [
+//     {
+//       id: '123',
+//       name: 'John',
+//       email: 'john@gmail.com',
+//       password: 'cookies',
+//       entries: 2,
+//       joined: new Date()
+//     },
+//     {
+//       id: '128',
+//       name: 'Mimi',
+//       email: 'mimi@gmail.com',
+//       pasword: 'banana',
+//       entries: 5,
+//       joined: new Date()
+//     },
+//   ]
+// }
 
 app.get('/', (req, res) => {
   res.send('Welcome')
@@ -57,14 +57,27 @@ app.post('/signin', (req, res) => {
 
 app.post('/register', (req, res) => {
   const {email, name } = req.body
-  database.users.push({
-    id: '126',
+  db('users')
+  .returning('*')
+  .insert({
     name: name,
     email: email,
-    entries: 0,
     joined: new Date()
   })
-  res.status(200).json(database.users[database.users.length - 1])
+  .then(user => {
+    res.json(user[0])
+  })
+  .catch(err => {
+    res.status(404).json(err, 'unable to register')
+  })
+  // database.users.push({
+  //   id: '126',
+  //   name: name,
+  //   email: email,
+  //   entries: 0,
+  //   joined: new Date()
+  // })
+  // res.status(200).json(database.users[database.users.length - 1])
 })
 
 app.get('/profile/:id', (req, res) => {
@@ -98,5 +111,5 @@ app.put('/image',(req, res) => {
 })
 
 app.listen(3001, ()=> {
-  console.log('app is running on port 3000');
+  console.log('app is running on port 3001');
 })
