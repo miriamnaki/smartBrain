@@ -6,8 +6,9 @@ const knex = require('knex');
 const register = require('./controllers/register');
 const signin = require('./controllers/signin');
 const profile = require('./controllers/profile');
+const image = require('./controllers/image');
 
-// initiating database
+// connecting ot the database
 const db = knex({
   client: 'pg',
   connection: {
@@ -43,16 +44,7 @@ app.get('/profile/:id', (req, res) => profile.handleProfile(req, res, db));
 
 
 // incrementing entries end point
-app.put('/image',(req, res) => {
-  const {id} = req.body;
-  db('users').where('id', '=', id)
-  .increment('entries', 1)
-  .returning('entries')
-  .then(entries => {
-    res.json(entries[0].entries)
-  })
-  })
-
+app.put('/image', (req, res) => image.handleImagePost(req, res, db));
 
   // app port
 app.listen(3001, ()=> {
