@@ -46,6 +46,8 @@ app.get('/profile/:id', (req, res) => profile.handleProfile(req, res, db));
 // incrementing entries end point
 app.put('/image', (req, res) => image.handleImagePost(req, res, db));
 
+app.post('/imageUrl', (req, res) => image.handleApiCall(req, res));
+
   // app port
 app.listen(3001, ()=> {
   console.log('app is running on port 3001');
